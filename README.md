@@ -1,7 +1,5 @@
 # postcss-resolve-urls
 
----
-
 A [PostCSS](https://esbuild.github.io/) plugin for resolving relative URLs
 
 > **IMPORTANT** This plugin depends on source maps
