@@ -20,23 +20,21 @@ var __toModule = (module2) => {
 // index.ts
 var import_path = __toModule(require("path"));
 var Processed = Symbol("processed");
-var RelativeURL = /(?<=url\((?!['"]?(?:data|https?):)).+(?=\))/;
+var RelativeURL = /(?<=url\((?!['"]?(?:data|https?):)).+?(?=\))/g;
 var postCssResolveUrls = (options = {}) => {
   return {
     postcssPlugin: "postcss-resolve-urls",
     Declaration(declaration) {
-      const assetPath = declaration.value.match(RelativeURL)?.[0] || false;
-      const isProcessed = declaration[Processed];
-      if (assetPath && !isProcessed) {
-        declaration.value = transform(declaration, assetPath);
+      if (!declaration[Processed]) {
+        declaration.value = declaration.value.replaceAll(RelativeURL, (url) => transform(declaration, url));
         declaration[Processed] = true;
       }
     }
   };
 };
-var transform = (declaration, asset) => {
+var transform = (declaration, url) => {
   let { start, input: { file, map } } = declaration.source;
-  let consumer = map.consumer(), original = consumer.originalPositionFor(start).source, resolved = (0, import_path.relative)((0, import_path.dirname)(file), (0, import_path.resolve)((0, import_path.dirname)(original), asset.replace(/['"]/g, "")));
-  return declaration.value.replace(asset, resolved);
+  let consumer = map.consumer(), original = consumer.originalPositionFor(start).source;
+  return (0, import_path.relative)((0, import_path.dirname)(file), (0, import_path.resolve)((0, import_path.dirname)(original), url.replace(/['"]/g, "")));
 };
 module.exports = postCssResolveUrls;

@@ -1,36 +1,32 @@
 import {dirname, relative, resolve} from 'path';
 
 const Processed = Symbol('processed');
-const RelativeURL = /(?<=url\((?!['"]?(?:data|https?):)).+(?=\))/;
+const RelativeURL = /(?<=url\((?!['"]?(?:data|https?):)).+?(?=\))/g;
 
 const postCssResolveUrls = (options = {}) => {
     return {
         postcssPlugin: 'postcss-resolve-urls',
         Declaration(declaration)
         {
-            const assetPath = declaration.value.match(RelativeURL)?.[0] || false
-            const isProcessed = declaration[Processed]
-
-            if (assetPath && !isProcessed)
+            if (! declaration[Processed] && RelativeURL.test(declaration.value))
             {
-                declaration.value = transform(declaration, assetPath)
-                declaration[Processed] = true;
+                declaration.value = declaration.value.replaceAll(RelativeURL, (url) => transform(declaration, url))
+                declaration[Processed] = true
             }
         }
     }
 }
 
-const transform = (declaration, asset) => {
+const transform = (declaration, url) => {
     let {start, input: {file, map}} = declaration.source;
 
     let consumer = map.consumer(),
-        original = consumer.originalPositionFor(start).source,
-        resolved = relative(
-            dirname(file),
-            resolve(dirname(original), asset.replace(/['"]/g, ''))
-        );
+        original = consumer.originalPositionFor(start).source;
 
-    return declaration.value.replace(asset, resolved)
+    return relative(
+        dirname(file),
+        resolve(dirname(original), url.replace(/['"]/g, ''))
+    );
 }
 
 export = postCssResolveUrls
