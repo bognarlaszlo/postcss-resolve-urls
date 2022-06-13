@@ -3,13 +3,14 @@ import {dirname, relative, resolve} from 'path';
 const Processed = Symbol('processed');
 const RelativeURL = /(?<=url\((?!['"]?(?:data|https?):)).+?(?=\))/g;
 
-const postCssResolveUrls = (options = {}) => {
+const postCssResolveUrls = (options = {debug: false}) => {
     return {
         postcssPlugin: 'postcss-resolve-urls',
         Declaration(declaration)
         {
             if (! declaration[Processed] && RelativeURL.test(declaration.value))
             {
+                options.debug && console.log(declaration.value)
                 declaration.value = declaration.value.replaceAll(RelativeURL, (url) => transform(declaration, url))
                 declaration[Processed] = true
             }

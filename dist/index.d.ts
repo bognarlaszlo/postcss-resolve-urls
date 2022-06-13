@@ -1,4 +1,6 @@
-declare const postCssResolveUrls: (options?: {}) => {
+declare const postCssResolveUrls: (options?: {
+    debug: boolean;
+}) => {
     postcssPlugin: string;
     Declaration(declaration: any): void;
 };

@@ -21,11 +21,12 @@ var __toModule = (module2) => {
 var import_path = __toModule(require("path"));
 var Processed = Symbol("processed");
 var RelativeURL = /(?<=url\((?!['"]?(?:data|https?):)).+?(?=\))/g;
-var postCssResolveUrls = (options = {}) => {
+var postCssResolveUrls = (options = { debug: false }) => {
   return {
     postcssPlugin: "postcss-resolve-urls",
     Declaration(declaration) {
-      if (!declaration[Processed]) {
+      if (!declaration[Processed] && RelativeURL.test(declaration.value)) {
+        options.debug && console.log(declaration.value);
         declaration.value = declaration.value.replaceAll(RelativeURL, (url) => transform(declaration, url));
         declaration[Processed] = true;
       }
