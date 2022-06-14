@@ -5,7 +5,7 @@
         "resolveJsonModule": true,
         "declaration": true,
         "lib": [
-            "ES2020"
+            "ES2021"
         ],
     },
     "types": [

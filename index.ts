@@ -21,12 +21,13 @@ const transform = (declaration, url) => {
     let {start, input: {file, map}} = declaration.source;
 
     let consumer = map.consumer(),
-        original = consumer.originalPositionFor(start).source;
+        original = consumer.originalPositionFor(start).source,
+        resolved = relative(
+            dirname(file),
+            resolve(dirname(original), url.replace(/['"]/g, ''))
+        );
 
-    return relative(
-        dirname(file),
-        resolve(dirname(original), url.replace(/['"]/g, ''))
-    );
+    return resolved.replaceAll('\\', '\/')
 }
 
 export = postCssResolveUrls

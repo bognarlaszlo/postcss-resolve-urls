@@ -26,7 +26,6 @@ var postCssResolveUrls = (options = { debug: false }) => {
     postcssPlugin: "postcss-resolve-urls",
     Declaration(declaration) {
       if (!declaration[Processed] && RelativeURL.test(declaration.value)) {
-        options.debug && console.log(declaration.value);
         declaration.value = declaration.value.replaceAll(RelativeURL, (url) => transform(declaration, url));
         declaration[Processed] = true;
       }
