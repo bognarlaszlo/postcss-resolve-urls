@@ -34,7 +34,7 @@ var postCssResolveUrls = (options = { debug: false }) => {
 };
 var transform = (declaration, url) => {
   let { start, input: { file, map } } = declaration.source;
-  let consumer = map.consumer(), original = consumer.originalPositionFor(start).source;
-  return (0, import_path.relative)((0, import_path.dirname)(file), (0, import_path.resolve)((0, import_path.dirname)(original), url.replace(/['"]/g, "")));
+  let consumer = map.consumer(), original = consumer.originalPositionFor(start).source, resolved = (0, import_path.relative)((0, import_path.dirname)(file), (0, import_path.resolve)((0, import_path.dirname)(original), url.replace(/['"]/g, "")));
+  return resolved.replaceAll("\\", "/");
 };
 module.exports = postCssResolveUrls;

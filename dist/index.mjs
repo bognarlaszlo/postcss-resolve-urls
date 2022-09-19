@@ -21,8 +21,8 @@ var require_postcss_resolve_urls = __commonJS({
     };
     var transform = (declaration, url) => {
       let { start, input: { file, map } } = declaration.source;
-      let consumer = map.consumer(), original = consumer.originalPositionFor(start).source;
-      return relative(dirname(file), resolve(dirname(original), url.replace(/['"]/g, "")));
+      let consumer = map.consumer(), original = consumer.originalPositionFor(start).source, resolved = relative(dirname(file), resolve(dirname(original), url.replace(/['"]/g, "")));
+      return resolved.replaceAll("\\", "/");
     };
     module.exports = postCssResolveUrls;
   }

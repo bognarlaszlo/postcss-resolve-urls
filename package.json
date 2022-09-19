@@ -1,6 +1,6 @@
 {
   "name": "postcss-resolve-urls",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "A PostCSS plugin for resolving relative URLs",
   "keywords": [
     "postcss",
